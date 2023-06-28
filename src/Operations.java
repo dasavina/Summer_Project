@@ -1,3 +1,11 @@
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -48,7 +56,7 @@ public class Operations {
                     if (newDate.isAfter(LocalDate.now())) {
                         System.out.println("Неправильно введено значення. Спробуйте ще раз\n");
                     } else {
-                        book.setdateOfPublishing(newDate);
+                        book.setDateOfPublishing(newDate);
                     }
                 } catch (NumberFormatException | InputMismatchException e) {
                     System.out.println("неправильно введено значення року");
@@ -78,10 +86,10 @@ public class Operations {
                 books.sort(byName);
             }
             case "3" -> {
-                Comparator<Book> byDate = Comparator.comparing(Book::getdateOfPublishing);
+                Comparator<Book> byDate = Comparator.comparing(Book::getDateOfPublishing);
                 books.sort(byDate);
             }
-            default -> System.out.println("");
+            default -> System.out.println("Неправильно введено параметр");
         }
         return books;
     }
@@ -91,4 +99,38 @@ public class Operations {
             System.out.println(book.toString());
         }
     }
+
+    public void Load() {
+        GsonBuilder GB = new GsonBuilder();
+        GB.registerTypeAdapter(LocalDate.class, new DataSer());
+        GB.registerTypeAdapter(LocalDate.class, new DeSer());
+
+        Path path = Paths.get("");
+        String str;
+        Gson GSer = GB.setPrettyPrinting().create();
+        try {
+            str = Files.readString(path);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        books = GSer.fromJson(str, new TypeToken<>() {
+        });
+    }
+
+    public void Save() {
+        GsonBuilder GB = new GsonBuilder();
+        GB.registerTypeAdapter(LocalDate.class, new DataSer());
+        GB.registerTypeAdapter(LocalDate.class, new DeSer());
+
+        Path path = Paths.get("");
+        Gson GSer = GB.setPrettyPrinting().create();
+        String data = GSer.toJson(books);
+        try {
+            Files.writeString(path, data);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 }

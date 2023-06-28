@@ -37,11 +37,11 @@ public class Book {
         this.description = description;
     }
 
-    public LocalDate getdateOfPublishing() {
+    public LocalDate getDateOfPublishing() {
         return dateOfPublishing;
     }
 
-    public void setdateOfPublishing(LocalDate dateOfPublishing) {
+    public void setDateOfPublishing(LocalDate dateOfPublishing) {
         this.dateOfPublishing = dateOfPublishing;
     }
     @Override
@@ -52,7 +52,7 @@ public class Book {
                         "\nНазва: " + getName() +
                         "\nАвтор: " + getAuthor() +
                         "\nОпис: " + getDescription() +
-                        "\nРік видання: " + getdateOfPublishing() +
+                        "\nРік видання: " + getDateOfPublishing() +
                         "************************************\n"
                 );
     }
