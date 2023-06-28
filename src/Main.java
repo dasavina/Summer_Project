@@ -1,6 +1,6 @@
+import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class Main {
@@ -13,13 +13,13 @@ public class Main {
             System.out.println("""
                     ************************************
                     Введіть команду:
-                    -- + (1) додати книгу до бібліотеки
-                    -- + (2) редагувати інформацію про книгу
-                    -- + (3) видалити
-                    -- + (4) пошук
-                    -- + (5) показати все
-                    -- + (6) сортувати
-                    -- + (0) вийти
+                    -- ++ (1) додати книгу до бібліотеки
+                    -- ++ (2) редагувати інформацію про книгу
+                    -- ++ (3) видалити
+                    -- ++ (4) пошук
+                    -- ++ (5) показати все
+                    -- ++ (6) сортувати
+                    -- ++ (0) вийти
                     ************************************""");
             command = scanner.nextLine();
             switch (command) {
@@ -33,15 +33,21 @@ public class Main {
                     String author = scan.nextLine();
                     System.out.println("Введіть опис книги:\n");
                     String description = scan.nextLine();
-                    System.out.println("Введіть рік видання");
-                    int year;
-
+                    System.out.println("Введіть дату видання");
                     while (!OkNum) {
-                        year = getInt();
-                        OkNum = true;
-                        if ((year < 0)||(year > LocalDate.now().getYear())) {
+                        try {
+                            String date = scan.nextLine();
+                            Scanner forDate = new Scanner(date).useDelimiter("/");
+                            LocalDate dateOfPublishing = LocalDate.of(forDate.nextInt(), forDate.nextInt(), forDate.nextInt());
+                            OkNum = true;
+                            if (dateOfPublishing.isAfter(LocalDate.now())) {
+                                System.out.println("Неправильно введено значення. Спробуйте ще раз\n");
+                                OkNum = false;
+                            }
+                        }
+                        catch (DateTimeException | NumberFormatException e)
+                        {
                             System.out.println("Неправильно введено значення. Спробуйте ще раз\n");
-                            OkNum = false;
                         }
                     }
 
@@ -144,12 +150,12 @@ public class Main {
 
                 case "6" -> {
                     Scanner scan = new Scanner(System.in);
-                    System.out.println("За чим сортувати книги? автор(1)/назва(2)/рік видання(3)");
+                    System.out.println("За чим сортувати книги? автор(1)/назва(2)/дата видання(3)");
                     String how = scan.nextLine();
                     //sorting operation
                 }
 
-                case "0" -> System.exit(0);
+                case "0" -> System.exit(0);//save operation before
 
                 default -> System.out.println("Неправильно введено команду");
             }
@@ -157,21 +163,6 @@ public class Main {
         } while (true);
     }
 
-    public static int getInt() {
-        int N = 0;
-        boolean checkE = false;
-        while (!checkE) {
-            Scanner scanner = new Scanner(System.in);
-            try {
-                N = scanner.nextInt();
-                checkE = true;
-            } catch (NumberFormatException | InputMismatchException e) {
-                System.out.println("Неправильне значення");
-                checkE = false;
-            }
-        }
-        return N;
-    }
 
 
 }

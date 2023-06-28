@@ -1,14 +1,16 @@
+import java.time.LocalDate;
+
 public class Book {
     private String name;
     private String author;
     private String description;
-    private int yearOfPublishing;
+    private LocalDate dateOfPublishing; //change to date of publishing
 
-    public Book(String name, String author, String description, int yearOfPublishing) {
+    public Book(String name, String author, String description, LocalDate dateOfPublishing) {
         this.name = name;
         this.author = author;
         this.description = description;
-        this.yearOfPublishing = yearOfPublishing;
+        this.dateOfPublishing = dateOfPublishing;
     }
 
     public String getName() {
@@ -35,12 +37,12 @@ public class Book {
         this.description = description;
     }
 
-    public int getYearOfPublishing() {
-        return yearOfPublishing;
+    public LocalDate getdateOfPublishing() {
+        return dateOfPublishing;
     }
 
-    public void setYearOfPublishing(int yearOfPublishing) {
-        this.yearOfPublishing = yearOfPublishing;
+    public void setdateOfPublishing(LocalDate dateOfPublishing) {
+        this.dateOfPublishing = dateOfPublishing;
     }
     @Override
     public String toString()
@@ -50,7 +52,7 @@ public class Book {
                         "\nНазва: " + getName() +
                         "\nАвтор: " + getAuthor() +
                         "\nОпис: " + getDescription() +
-                        "\nРік видання: " + getYearOfPublishing() +
+                        "\nРік видання: " + getdateOfPublishing() +
                         "************************************\n"
                 );
     }
