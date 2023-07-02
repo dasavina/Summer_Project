@@ -1,4 +1,5 @@
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 public class Book {
     private String name;
@@ -52,8 +53,8 @@ public class Book {
                         "\nНазва: " + getName() +
                         "\nАвтор: " + getAuthor() +
                         "\nОпис: " + getDescription() +
-                        "\nРік видання: " + getDateOfPublishing() +
-                        "************************************\n"
+                        "\nРік видання: " + getDateOfPublishing().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")) +
+                        "\n************************************\n"
                 );
     }
 }

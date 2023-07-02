@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -37,7 +38,14 @@ public class Operations {
                 }
 
             }
-            default -> System.out.println("команди не існує");
+            case "3" -> {
+                for (Book book : books) {
+                    if (book.getDescription().contains(keywords)) {
+                        found.add(book);
+                    }
+                }
+            }
+            default -> throw new RuntimeException();
         }
         return found;
     }
@@ -52,18 +60,20 @@ public class Operations {
             case "4" -> {
                 try {
                     Scanner scanner = new Scanner(change).useDelimiter("/");
-                    LocalDate newDate = LocalDate.of(scanner.nextInt(), scanner.nextInt(), scanner.nextInt());
+                    int day = scanner.nextInt();
+                    int month = scanner.nextInt();
+                    int year = scanner.nextInt();
+                    LocalDate newDate = LocalDate.of(year, month, day);
                     if (newDate.isAfter(LocalDate.now())) {
-                        System.out.println("Неправильно введено значення. Спробуйте ще раз\n");
+                        throw new RuntimeException("Неправильно введено значення. Спробуйте ще раз\n");
                     } else {
                         book.setDateOfPublishing(newDate);
                     }
-                } catch (NumberFormatException | InputMismatchException e) {
-                    System.out.println("неправильно введено значення року");
+                } catch (NumberFormatException | InputMismatchException | DateTimeException e) {
+                    throw new RuntimeException("неправильно введено значення");
                 }
             }
-            default -> System.out.println("команди не існує");
-
+            default -> throw new RuntimeException("команди не існує");
         }
         books.set(index, book);
         return books;
@@ -89,7 +99,7 @@ public class Operations {
                 Comparator<Book> byDate = Comparator.comparing(Book::getDateOfPublishing);
                 books.sort(byDate);
             }
-            default -> System.out.println("Неправильно введено параметр");
+            default -> throw new RuntimeException();
         }
         return books;
     }
@@ -105,7 +115,7 @@ public class Operations {
         GB.registerTypeAdapter(LocalDate.class, new DataSer());
         GB.registerTypeAdapter(LocalDate.class, new DeSer());
 
-        Path path = Paths.get("");
+        Path path = Paths.get("src/library.json");
         String str;
         Gson GSer = GB.setPrettyPrinting().create();
         try {
@@ -123,7 +133,7 @@ public class Operations {
         GB.registerTypeAdapter(LocalDate.class, new DataSer());
         GB.registerTypeAdapter(LocalDate.class, new DeSer());
 
-        Path path = Paths.get("");
+        Path path = Paths.get("src/library.json");
         Gson GSer = GB.setPrettyPrinting().create();
         String data = GSer.toJson(books);
         try {

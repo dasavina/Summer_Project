@@ -8,9 +8,9 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
 public class DeSer implements JsonDeserializer<LocalDate> {
-@Override
-public LocalDate deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
-        throws JsonParseException {
+    @Override
+    public LocalDate deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
+            throws JsonParseException {
         return LocalDate.parse(json.getAsString(), DateTimeFormatter.ofPattern("d-MMM-yyyy"));
-        }
-        }
+    }
+}
