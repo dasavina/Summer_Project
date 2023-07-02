@@ -86,8 +86,8 @@ public class Operations {
 
     public ArrayList<Book> sort(String parameter) {
 
-        switch (parameter){
-            case "1" ->{
+        switch (parameter) {
+            case "1" -> {
                 Comparator<Book> byAuthor = Comparator.comparing(Book::getAuthor);
                 books.sort(byAuthor);
             }

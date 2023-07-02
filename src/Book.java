@@ -45,9 +45,9 @@ public class Book {
     public void setDateOfPublishing(LocalDate dateOfPublishing) {
         this.dateOfPublishing = dateOfPublishing;
     }
+
     @Override
-    public String toString()
-    {
+    public String toString() {
         return (
                 "************************************" +
                         "\nНазва: " + getName() +
@@ -55,6 +55,6 @@ public class Book {
                         "\nОпис: " + getDescription() +
                         "\nРік видання: " + getDateOfPublishing().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")) +
                         "\n************************************\n"
-                );
+        );
     }
 }

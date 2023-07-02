@@ -1,6 +1,7 @@
 import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class Main {
@@ -53,7 +54,7 @@ public class Main {
                                 System.out.println("Неправильно введено значення. Спробуйте ще раз\n");
                                 OkNum = false;
                             }
-                        } catch (DateTimeException | NumberFormatException e) {
+                        } catch (DateTimeException | NumberFormatException | InputMismatchException e) {
                             System.out.println("Неправильно введено значення! Спробуйте ще раз\n");
                         }
                     }
@@ -75,39 +76,41 @@ public class Main {
 
 
                         Book toEdit;
-                        boolean exit = false;
+                        listCycle:
                         for (Book book : foundBooks) {
-                            if (!exit) {
-                                System.out.println(book.toString());
-                                boolean checkCommand = false;
-                                while (!checkCommand) {
-                                    System.out.println("Редагувати цю книгу? так(1)/ні(2)/вийти з редагування(0)");
-                                    switch (scan.nextLine()) {
-                                        case "1" -> {
-                                            boolean checkInfo = false;
-                                            while (!checkInfo) {
-                                                try {
-                                                    Scanner scannerForEdition = new Scanner(System.in);
-                                                    checkCommand = true;
-                                                    toEdit = book;
-                                                    System.out.println("Введіть що потрібно змінити: автор(1), назва(2), опис(3), дату видання(4)");
-                                                    String what = scannerForEdition.nextLine();
-                                                    System.out.println("Введіть оновлену інформацію");
-                                                    String changes = scannerForEdition.nextLine();
-                                                    checkInfo = true;
-                                                    act.update(toEdit, what, changes);
-                                                } catch (RuntimeException e) {
-                                                    checkInfo = false;
-                                                }
-                                            }
 
+                            System.out.println(book.toString());
+                            boolean checkCommand = false;
+                            while (!checkCommand) {
+                                System.out.println("Редагувати цю книгу? так(1)/ні(2)/вийти з редагування(0)");
+                                switch (scan.nextLine()) {
+                                    case "1" -> {
+                                        boolean checkInfo = false;
+                                        while (!checkInfo) {
+                                            try {
+                                                Scanner scannerForEdition = new Scanner(System.in);
+                                                checkCommand = true;
+                                                toEdit = book;
+                                                System.out.println("Введіть що потрібно змінити: автор(1), назва(2), опис(3), дату видання(4)");
+                                                String what = scannerForEdition.nextLine();
+                                                System.out.println("Введіть оновлену інформацію");
+                                                String changes = scannerForEdition.nextLine();
+                                                checkInfo = true;
+                                                act.update(toEdit, what, changes);
+                                            } catch (RuntimeException e) {
+                                                checkInfo = false;
+                                            }
                                         }
-                                        case "2" -> checkCommand = true;
-                                        case "0" -> exit = true;
-                                        default -> System.out.println("неправильна команда");
+
                                     }
+                                    case "2" -> checkCommand = true;
+                                    case "0" -> {
+                                        break listCycle;
+                                    }
+                                    default -> System.out.println("неправильна команда");
                                 }
-                            } else break;
+                            }
+
                         }
                     } catch (RuntimeException e) {
                         System.out.println("Неправильно заданий параметр або запит");
@@ -116,7 +119,6 @@ public class Main {
                 }
 
                 case "3" -> {
-
                     Scanner scan = new Scanner(System.in);
                     System.out.println("Пошук книги для видалення");
                     System.out.println("Пошук книги за автором (1), за назвою (2) чи за описом(3) ?");
@@ -128,26 +130,27 @@ public class Main {
                     //get results from the operation in list
                     boolean checkCommand = false;
                     Book toDelete;
-                    boolean exit = false;
+                    listCycle:
                     for (Book book : foundBooks) {
-                        if (!exit) {
-                            System.out.println(book.toString());
-                            while (!checkCommand) {
-                                Scanner scannerForDeletion = new Scanner(System.in);
-                                System.out.println("видалити цю книгу? так(1)/ні(2)/вийти з видалення(0)");
-                                switch (scannerForDeletion.nextLine()) {
-                                    case "1" -> {
-                                        checkCommand = true;
-                                        toDelete = book;
-                                        act.delete(toDelete);
 
-                                    }
-                                    case "2" -> checkCommand = true;
-                                    case "0" -> exit = true;
-                                    default -> System.out.println("неправильна команда");
+                        System.out.println(book.toString());
+                        while (!checkCommand) {
+                            Scanner scannerForDeletion = new Scanner(System.in);
+                            System.out.println("видалити цю книгу? так(1)/ні(2)/вийти з видалення(0)");
+                            switch (scannerForDeletion.nextLine()) {
+                                case "1" -> {
+                                    checkCommand = true;
+                                    toDelete = book;
+                                    act.delete(toDelete);
+
                                 }
+                                case "2" -> checkCommand = true;
+                                case "0" -> {
+                                    break listCycle;
+                                }
+                                default -> System.out.println("неправильна команда");
                             }
-                        } else break;
+                        }
                     }
                 }
 
@@ -182,25 +185,25 @@ public class Main {
                 }
 
                 case "7" -> System.out.println("""
-                Консольний додаток призначений для обліку книг бібліотеки користувача.
-                Існують наступні команди:
-                1)	Додати книгу.\s
-                Необхідно ввести інформацію про книгу по запропонованим полям, книгу буде збережено у список
-                2)	редагувати інформацію про книгу
-                Спочатку пропонується знайти книгу, яку необхідно редагувати. Потім оберіть, що саме ви бажаєте редагувати та введіть нову інформацію. Попередні дані буде замінено на введені
-                3)	видалити
-                Спочатку пропонується знайти книгу, яку необхідно видалити, після підтвердження операції книгу буде остаточно видалено зі списку
-                4)	пошук
-                Пошук книги може бути здійснено за кількома параметрами. Оберіть параметр, введіть запит та перегляньте результати
-                5)	показати все
-                Виводить весь список на екран
-                6)	сортувати
-                Сортування проводиться за різними критеріями. Оберіть, за чим сортувати список та перегляньте результат
-                7)	вийти
-                Програма завершує роботу тільки після введення даної команди, зберігши всі зміни
-                Збереження відбувається автоматично після кожної виконаної команди. Завантаження даних з файлу збереження відбувається автоматично з початком роботи програми
-                                
-                """);
+                        Консольний додаток призначений для обліку книг бібліотеки користувача.
+                        Існують наступні команди:
+                        1)	Додати книгу.\s
+                        Необхідно ввести інформацію про книгу по запропонованим полям, книгу буде збережено у список
+                        2)	редагувати інформацію про книгу
+                        Спочатку пропонується знайти книгу, яку необхідно редагувати. Потім оберіть, що саме ви бажаєте редагувати та введіть нову інформацію. Попередні дані буде замінено на введені
+                        3)	видалити
+                        Спочатку пропонується знайти книгу, яку необхідно видалити, після підтвердження операції книгу буде остаточно видалено зі списку
+                        4)	пошук
+                        Пошук книги може бути здійснено за кількома параметрами. Оберіть параметр, введіть запит та перегляньте результати
+                        5)	показати все
+                        Виводить весь список на екран
+                        6)	сортувати
+                        Сортування проводиться за різними критеріями. Оберіть, за чим сортувати список та перегляньте результат
+                        7)	вийти
+                        Програма завершує роботу тільки після введення даної команди, зберігши всі зміни
+                        Збереження відбувається автоматично після кожної виконаної команди. Завантаження даних з файлу збереження відбувається автоматично з початком роботи програми
+                                        
+                        """);
 
                 case "0" -> {
                     act.Save();
